@@ -75,7 +75,6 @@ class ChessBoard
         end
       end
     end
-
     dup_board
   end
 

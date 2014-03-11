@@ -25,10 +25,16 @@ class Piece
   end
 
   def move_into_check?(position)
-    dup_board = Board.new(@board.grid_dup)
+    dup_board = @board.board_dup
 
     dup_board.move(self.position, position)
     dup_board.in_check?(self.color)
+  end
+
+  def valid_moves
+    self.moves.select do |position|
+      !move_into_check?(position)
+    end
   end
 
 
