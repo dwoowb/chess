@@ -15,6 +15,8 @@ require_relative 'chess_board'
 # n.moves([0,0])
 # k.moves([5,5])
 
-
+#
 # cb = ChessBoard.new
-# cb.setup_board
+# pb = Pawn.new([1,0], cb, :black)
+# pw = Pawn.new([6,0], cb, :white)
+# pb.moves([1,0])
