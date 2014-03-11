@@ -1,5 +1,3 @@
-require_relative 'chess_files'
-
 class Piece
 
   attr_reader :color
@@ -11,16 +9,18 @@ class Piece
   end
 
   def moves
-    #new_position.all? { |coord| coord.between?(0,7) }
+    #BULLSHIT
+  end
+
+  def on_board?(position)
     poss_positions = []
-    @board.each do |row|
-      row.each do |col|
-        poss_positions << [row, col]
+    @board.grid.each_with_index do |row, idx|
+      row.each_index do |col|
+        poss_positions << [idx, col]
       end
     end
 
-    poss_positions
+    poss_positions.include?(position)
   end
-
 
 end
