@@ -20,8 +20,56 @@ class ChessBoard
     self.grid[row][col] = object
   end
 
-  def setup_board
+  def render
+    @grid.each do |row|
+      row.each do |obj|
+        p obj.class
+      end
+      puts
+    end
+  end
 
+  def in_check?(color)
+
+    king_position = @grid.flatten.select do |piece|
+      piece.class == King && piece.color == color
+    end.first.position
+
+    enemy_moves = []
+
+    @grid.flatten.select do |piece|
+      piece.color != color
+    end.each do |enemy|
+      enemy_moves += enemy.moves
+    end
+
+    return true if enemy_moves.include?(king_position)
+    false
+  end
+
+  def move(start_pos, end_pos)
+
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  def setup_board
     @grid[1].each_index do |pawn_col|
       self[[1, pawn_col]] = Pawn.new([1, pawn_col], self, :black)
     end
@@ -50,20 +98,7 @@ class ChessBoard
 
     self[[0,3]] = Queen.new([0, 3], self, :black)
     self[[7,3]] = Queen.new([7, 3], self, :white)
-
   end
-
-  def render
-
-    grid.each do |row|
-      row.each do |obj|
-        p obj.class
-      end
-      print "\n\n"
-    end
-
-  end
-
 
 
 end
