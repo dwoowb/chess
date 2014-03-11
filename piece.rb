@@ -2,9 +2,12 @@ require_relative 'chess_files'
 
 class Piece
 
-  def initialize(position, board)
+  attr_reader :color
+
+  def initialize(position, board, color)
     @position = position
     @board = board
+    @color = color
   end
 
   def moves

@@ -2,8 +2,8 @@ require_relative 'chess_files'
 
 class SteppingPiece < Piece
 
-  def initialize(position, board)
-    super(position, board)
+  def initialize(position, board, color)
+    super(position, board, color)
   end
 
   def moves(start_position, deltas)
@@ -14,8 +14,10 @@ class SteppingPiece < Piece
       moves << [row + row_shift, col + col_shift]
     end
 
-    moves.select{|move| super.include?(move)}
-
+    moves.select do |move|
+      super.include?(move) && @board[move].color != self.color
+    end
+    # moves that are valid on the board and do not run into pieces of the same color
   end
 
 end
@@ -34,8 +36,8 @@ class Knight < SteppingPiece
     [-1, -2]
   ]
 
-  def initialize(position, board)
-    super(position, board)
+  def initialize(position, board, color)
+    super(position, board, color)
   end
 
   def moves(start_position, KNIGHT_DELTAS)
@@ -57,8 +59,8 @@ class King < SteppingPiece
     [0, -1]
   ]
 
-  def initialize(position, board)
-    super(position, board)
+  def initialize(position, board, color)
+    super(position, board, color)
   end
 
   def moves(start_position, KING_DELTAS)

@@ -2,8 +2,8 @@ require_relative 'chess_files'
 
 class SlidingPiece < Piece
 
-  def initialize(position, board)
-    super(position, board)
+  def initialize(position, board, color)
+    super(position, board, color)
   end
 
   def moves(start_position, range = 1)
@@ -23,8 +23,8 @@ end
 
 class Queen < SlidingPiece
 
-  def initialize(position, board)
-    super(position, board)
+  def initialize(position, board, color)
+    super(position, board, color)
   end
 
   def self.move_dirs
@@ -46,16 +46,16 @@ end
 
 class Rook < SlidingPiece
 
-  def initialize(position, board)
-    super(position, board)
+  def initialize(position, board, color)
+    super(position, board, color)
   end
 
 end
 
 class Bishop < SlidingPiece
 
-  def initialize(position, board)
-    super(position, board)
+  def initialize(position, board, color)
+    super(position, board, color)
   end
 
 end
