@@ -49,7 +49,38 @@ class ChessBoard
 
   def move(start_pos, end_pos)
 
+    # if self[start_pos].nil? then raise exception
+    # if self[start_pos].moves.include?(end_pos) == false then raise exception
+
+    self[end_pos] = self[start_pos]
+    self[start_pos] = nil
+    self[end_pos].position = end_pos
   end
+
+
+
+  def board_dup
+    dup_board = ChessBoard.new
+    dup_piece, dup_position = nil, nil
+
+    self.grid.each_with_index do |array, row|
+      array.each_with_index do |piece, col|
+        if piece
+          dup_position = piece.position.dup
+          dup_piece = piece.class.new(dup_position, dup_board, piece.color)
+          dup_board[dup_position] = dup_piece
+          # Hopefully updating the dup_board will update the dup_piece's board attribute.
+        else
+          dup_board[[row,col]] = nil
+        end
+      end
+    end
+
+    dup_board
+  end
+
+
+
 
 
 

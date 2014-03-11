@@ -20,3 +20,4 @@ require_relative 'chess_board'
 # pb = Pawn.new([1,0], cb, :black)
 # pw = Pawn.new([6,0], cb, :white)
 # pb.moves([1,0])
+

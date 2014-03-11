@@ -1,6 +1,7 @@
 class Piece
 
   attr_reader :color
+  attr_accessor :position
 
   def initialize(position, board, color)
     @position = position
@@ -22,5 +23,15 @@ class Piece
 
     poss_positions.include?(position)
   end
+
+  def move_into_check?(position)
+    dup_board = Board.new(@board.grid_dup)
+
+    dup_board.move(self.position, position)
+    dup_board.in_check?(self.color)
+  end
+
+
+
 
 end
