@@ -3,8 +3,8 @@ class ChessBoard
   attr_reader :grid
 
   BLACK_UNICODE = {
-    "Queen"  => "\u265A",
-    "King"   => "\u265B",
+    "King"   => "\u265A",
+    "Queen"  => "\u265B",
     "Rook"   => "\u265C",
     "Bishop" => "\u265D",
     "Knight" => "\u265E",
@@ -12,8 +12,8 @@ class ChessBoard
   }
 
   WHITE_UNICODE = {
-    "Queen"  => "\u2654",
-    "King"   => "\u2655",
+    "King"   => "\u2654",
+    "Queen"  => "\u2655",
     "Rook"   => "\u2656",
     "Bishop" => "\u2657",
     "Knight" => "\u2658",
