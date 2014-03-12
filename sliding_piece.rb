@@ -37,16 +37,16 @@ class Queen < SlidingPiece
     super(position, board, color)
   end
 
-  QUEEN_DELTAS =
-        [ [1, -1],
-          [1, 0],
-          [1, 1],
-          [0, 1],
-          [-1, 1],
-          [-1, 0],
-          [-1, -1],
-          [0, -1]
-        ]
+  QUEEN_DELTAS = [
+    [1, -1],
+    [1, 0],
+    [1, 1],
+    [0, 1],
+    [-1, 1],
+    [-1, 0],
+    [-1, -1],
+    [0, -1]
+  ]
 
 
   def directions
@@ -61,12 +61,12 @@ class Rook < SlidingPiece
     super(position, board, color)
   end
 
-    ROOK_DELTAS =
-        [ [1, 0],
-          [0, 1],
-          [-1, 0],
-          [0, -1]
-        ]
+    ROOK_DELTAS = [
+      [1, 0],
+      [0, 1],
+      [-1, 0],
+      [0, -1]
+    ]
 
   def directions
     ROOK_DELTAS
@@ -80,12 +80,12 @@ class Bishop < SlidingPiece
     super(position, board, color)
   end
 
-  BISHOP_DELTAS =
-        [ [1, -1],
-          [1, 1],
-          [-1, 1],
-          [-1, -1]
-        ]
+  BISHOP_DELTAS = [
+    [1, -1],
+    [1, 1],
+    [-1, 1],
+    [-1, -1]
+  ]
 
   def directions
     BISHOP_DELTAS

@@ -49,12 +49,17 @@ class ChessBoard
 
   def move(start_pos, end_pos)
 
-    # if self[start_pos].nil? then raise exception
-    # if self[start_pos].moves.include?(end_pos) == false then raise exception
-
-    self[end_pos] = self[start_pos]
-    self[start_pos] = nil
-    self[end_pos].position = end_pos
+    if self[start_pos].nil?
+      raise InvalidMove.new("There is no piece at that starting position.")
+    elsif self[start_pos].moves.include?(end_pos) == false
+      raise InvalidMove.new("This piece cannot move to that position.")
+    elsif self[start_pos].move_into_check?(end_pos)
+      raise InvalidMove.new("This move would put you in check.")
+    else
+      self[end_pos] = self[start_pos]
+      self[start_pos] = nil
+      self[end_pos].position = end_pos
+    end
   end
 
 
@@ -95,21 +100,6 @@ class ChessBoard
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   def setup_board
     @grid[1].each_index do |pawn_col|
       self[[1, pawn_col]] = Pawn.new([1, pawn_col], self, :black)
@@ -119,10 +109,10 @@ class ChessBoard
       self[[6, pawn_col]] = Pawn.new([6, pawn_col], self, :white)
     end
 
-    self[[0,0]] = Rook.new([0, 0], self, :black)
-    self[[0,7]] = Rook.new([0, 7], self, :black)
-    self[[7,0]] = Rook.new([7, 0], self, :white)
-    self[[7,7]] = Rook.new([7, 7], self, :white)
+    self[[0,0]] = Rook.new([0, 0],   self, :black)
+    self[[0,7]] = Rook.new([0, 7],   self, :black)
+    self[[7,0]] = Rook.new([7, 0],   self, :white)
+    self[[7,7]] = Rook.new([7, 7],   self, :white)
 
     self[[0,2]] = Bishop.new([0, 2], self, :black)
     self[[0,5]] = Bishop.new([0, 5], self, :black)
@@ -134,11 +124,11 @@ class ChessBoard
     self[[7,1]] = Knight.new([7, 1], self, :white)
     self[[7,6]] = Knight.new([7, 6], self, :white)
 
-    self[[0,4]] = King.new([0, 4], self, :black)
-    self[[7,4]] = King.new([7, 4], self, :white)
+    self[[0,4]] = King.new([0, 4],   self, :black)
+    self[[7,4]] = King.new([7, 4],   self, :white)
 
-    self[[0,3]] = Queen.new([0, 3], self, :black)
-    self[[7,3]] = Queen.new([7, 3], self, :white)
+    self[[0,3]] = Queen.new([0, 3],  self, :black)
+    self[[7,3]] = Queen.new([7, 3],  self, :white)
   end
 
 

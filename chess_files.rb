@@ -2,6 +2,9 @@ require_relative 'piece'
 require_relative 'stepping_piece'
 require_relative 'sliding_piece'
 require_relative 'chess_board'
+require_relative 'game'
+require_relative 'exceptions'
+
 
 # cb = ChessBoard.new
 # q = Queen.new([0,0], cb, :black)

@@ -161,6 +161,5 @@ class Pawn < SteppingPiece
     moves
   end
 
-
 end
 
