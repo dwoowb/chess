@@ -3,8 +3,10 @@
 class Game
 
   def self.setup_game
-   #    player1 = HumanPlayer.new(name)
-   #    player2 = HumanPlayer.new(name)
+    puts "Please enter a name for player 1"
+      player1 = HumanPlayer.new(gets.strip, :black)
+    puts "Please enter a name for player 2"
+      player2 = HumanPlayer.new(gets.strip, :white)
     Game.new(player1, player2, ChessBoard.new.setup_board)
   end
 
@@ -18,8 +20,22 @@ class Game
 
 
   def play
-    #will call HumanPlayer_object.play_turn
-    #call render after each play_turn
+    puts "Let the games begin!"
+    loop do
+      break if checkmate?(player1.color)
+      @player1.play_turn
+      #call render after each play_turn
+
+      break if checkmate?(player2.color)
+      @player2.play_turn
+      #call render after each play_turn
+    end
+
+    if @board.checkmate?(player1.color)
+          puts "#{player2.name} wins!"
+    elsif @board.checkmate?(player1.color)
+          puts "#{player1.name} wins!"
+    end
   end
 
 
@@ -27,6 +43,8 @@ end
 
 
 class HumanPlayer
+
+  attr_reader :name, :color
 
   USER_INPUT = {
     "a" => 0,
@@ -48,8 +66,9 @@ class HumanPlayer
   }
 
 
-  def initialize(name)
+  def initialize(name, color)
     @name = name
+    @color = color.to_sym
   end
 
   #could have a factory method here to instantiate new players
