@@ -1,7 +1,5 @@
 class ChessBoard
 
-  attr_reader :grid
-
   BLACK_UNICODE = {
     "King"   => "\u265A",
     "Queen"  => "\u265B",
@@ -20,7 +18,9 @@ class ChessBoard
     "Pawn"   => "\u2659"
   }
 
-  def initialize# (grid = nil)
+  attr_reader :grid
+
+  def initialize(grid = nil)
     @grid = new_grid
   end
 
@@ -38,16 +38,13 @@ class ChessBoard
     self.grid[row][col] = object
   end
 
-  def render
-    @grid.each do |row|
-      row.each do |obj|
-        p obj.class
-      end
-      puts
-    end
+  def move!(start_pos, end_pos)
+    self[end_pos] = self[start_pos]
+    self[start_pos] = nil
+    self[end_pos].position = end_pos
   end
 
-  def move(start_pos, end_pos)
+  def move(start_pos, end_pos, turn_color)
 
     if self[start_pos].nil?
       raise InvalidMove.new("There is no piece at that starting position.")
@@ -55,19 +52,12 @@ class ChessBoard
       raise InvalidMove.new("This piece cannot move to that position.")
     elsif self[start_pos].move_into_check?(end_pos)
       raise InvalidMove.new("This move would put you in check.")
+    elsif self[start_pos].color != turn_color
+      raise InvalidMove.new("This isn't your piece to move!")
     else
-      self[end_pos] = self[start_pos]
-      self[start_pos] = nil
-      self[end_pos].position = end_pos
+      move!(start_pos, end_pos)
     end
   end
-
-  def move!(start_pos, end_pos)
-    self[end_pos] = self[start_pos]
-    self[start_pos] = nil
-    self[end_pos].position = end_pos
-  end
-
 
   def board_dup
     dup_board = ChessBoard.new
@@ -79,7 +69,6 @@ class ChessBoard
           dup_position = piece.position.dup
           dup_piece = piece.class.new(dup_position, dup_board, piece.color)
           dup_board[dup_position] = dup_piece
-          # Hopefully updating the dup_board will update the dup_piece's board attribute.
         else
           dup_board[[row,col]] = nil
         end
@@ -88,76 +77,84 @@ class ChessBoard
     dup_board
   end
 
-  def in_check?(color)
-
-    king_position = @grid.flatten.select do |piece|
+  def king_position(color)
+    self.grid.flatten.select do |piece|
       piece.class == King && piece.color == color
     end.first.position
-  # could possibly break out into its own method ^
+  end
+
+  def enemy_moves(color)
     enemy_moves = []
 
-    @grid.flatten.select do |square|
+    self.grid.flatten.select do |square|
       square
     end.select do |piece|
       piece.color != color
     end.each do |enemy|
       enemy_moves += enemy.moves(enemy.position)
     end
-
-    return true if enemy_moves.include?(king_position)
-    false
+    enemy_moves
   end
 
-  def checkmate?(color)
-    return false unless in_check?(color)
+  def ally_moves(color)
     all_valid_moves = []
 
-    @grid.flatten.select do |square|
+    self.grid.flatten.select do |square|
       square
     end.select do |piece|
       piece.color == color
     end.each do |ally|
        all_valid_moves += ally.valid_moves
     end
-
-    all_valid_moves.empty?
+    all_valid_moves
   end
 
+  def in_check?(color)
+    return true if enemy_moves(color).include?(king_position(color))
+    false
+  end
+
+  def checkmate?(color)
+    return false unless in_check?(color)
+    ally_moves(color).empty?
+  end
+
+  def piece_color(square, unicode_color, bg_color)
+    unicode_piece = unicode_color[square.class.to_s]
+    print " #{unicode_piece} ".colorize(:background => bg_color)
+  end
+
+  def square_color(square, bg_color)
+    if square.nil?
+      print "   ".colorize(:background => bg_color)
+    else
+      if square.color == :white
+        piece_color(square, WHITE_UNICODE, bg_color)
+      else
+        piece_color(square, BLACK_UNICODE, bg_color)
+      end
+    end
+  end
 
   def render
     color_counter = 0
-    @grid.each_with_index do |array, row|
+    row_counter = 8
+
+    self.grid.each_with_index do |array, row|
+      print "#{row_counter} "
       color_counter += 1
       array.each_with_index do |square, col|
         if color_counter.even?
-          if square.nil?
-            print "   ".colorize(:background => :light_red)
-          else
-            if square.color == :white
-              unicode_piece = WHITE_UNICODE[square.class.to_s]
-              print " #{unicode_piece} ".colorize(:background => :light_red)
-            else
-              unicode_piece = BLACK_UNICODE[square.class.to_s]
-              print " #{unicode_piece} ".colorize(:background => :light_red)
-            end
-          end
+          square_color(square, :light_red)
         else
-          if square.nil?
-            print "   ".colorize(:background => :light_green)
-          else
-            if square.color == :white
-              unicode_piece = WHITE_UNICODE[square.class.to_s]
-              print " #{unicode_piece} ".colorize(:background => :light_green)
-            else
-              unicode_piece = BLACK_UNICODE[square.class.to_s]
-              print " #{unicode_piece} ".colorize(:background => :light_green)
-            end
-          end
+          square_color(square, :white)
         end
         color_counter += 1
       end
       puts
+      row_counter -= 1
     end
+    print "   a  b  c  d  e  f  g  h \n\n"
   end
 
 
@@ -194,6 +191,5 @@ class ChessBoard
 
     self
   end
-
 
 end

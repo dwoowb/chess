@@ -49,6 +49,7 @@ class Knight < SteppingPiece
 
 end
 
+
 class King < SteppingPiece
 
   KING_DELTAS = [
@@ -71,6 +72,7 @@ class King < SteppingPiece
   end
 
 end
+
 
 class Pawn < SteppingPiece
 
@@ -95,53 +97,34 @@ class Pawn < SteppingPiece
 
   def moves(start_position)
     if self.color == :white
-      white_moves(start_position)
+      pawn_moves(start_position, WHITE_PAWN_DELTAS)
     else
-      black_moves(start_position)
+      pawn_moves(start_position, BLACK_PAWN_DELTAS)
     end
   end
 
-  def white_moves(start_position)
+  def pawn_moves(start_position, deltas)
     moves = []
     row, col = start_position
 
-    WHITE_PAWN_DELTAS.each do |(row_shift, col_shift)|
+    deltas.each do |(row_shift, col_shift)|
       candidate_pos = [row + row_shift, col + col_shift]
 
       if on_board?(candidate_pos)
 
         if [row_shift, col_shift].any?{|shift| shift == 0}
-          if row_shift == -2 && @position[0] == 6
-            moves << candidate_pos if @board[candidate_pos].nil?
-          else
-            moves << candidate_pos if @board[candidate_pos].nil?
-          end
-        else
-          if @board[candidate_pos] && @board[candidate_pos].color != self.color
-            moves << candidate_pos
-          end
-        end
-
-      end
-    end
-
-    moves
-  end
-
-  def black_moves(start_position)
-    moves = []
-    row, col = start_position
-
-    BLACK_PAWN_DELTAS.each do |(row_shift, col_shift)|
-      candidate_pos = [row + row_shift, col + col_shift]
-
-      if on_board?(candidate_pos)
-
-        if [row_shift, col_shift].any?{|shift| shift == 0}
-          if row_shift == 2 && @position[0] == 1
-            moves << candidate_pos if @board[candidate_pos].nil?
-          else
-            moves << candidate_pos if @board[candidate_pos].nil?
+          if deltas == WHITE_PAWN_DELTAS
+            if row_shift == -2 && @position[0] == 6
+              moves << candidate_pos if @board[candidate_pos].nil?
+            else
+              moves << candidate_pos if @board[candidate_pos].nil?
+            end
+          elsif deltas == BLACK_PAWN_DELTAS
+            if row_shift == 2 && @position[0] == 1
+              moves << candidate_pos if @board[candidate_pos].nil?
+            else
+              moves << candidate_pos if @board[candidate_pos].nil?
+            end
           end
         else
           if @board[candidate_pos] && @board[candidate_pos].color != self.color

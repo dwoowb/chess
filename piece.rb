@@ -10,7 +10,6 @@ class Piece
   end
 
   def moves
-    #BULLSHIT
   end
 
   def on_board?(position)
@@ -20,7 +19,6 @@ class Piece
         poss_positions << [idx, col]
       end
     end
-
     poss_positions.include?(position)
   end
 
@@ -35,6 +33,5 @@ class Piece
       !move_into_check?(position)
     end
   end
-
 
 end

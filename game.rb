@@ -1,5 +1,3 @@
-
-
 class Game
 
   attr_reader :board
@@ -19,38 +17,36 @@ class Game
     @player2 = player2
   end
 
+  def turn(curr_player, next_player, turn_color)
+    puts "#{curr_player.name}'s turn:"
+    curr_player.play_turn(turn_color)
+    @board.render
+    puts "Check!" if @board.in_check?(next_player.color)
+  end
 
   def play
-    puts "Let the games begin!"
+    puts "    Let the games begin!"
+    puts
     @board.render
 
     loop do
       break if @board.checkmate?(@player1.color)
-      @player1.play_turn
-      @board.render
-      puts "Check!" if @board.in_check?(@player2.color)
-
+      turn(@player1, @player2, @player1.color)
       break if @board.checkmate?(@player2.color)
-      @player2.play_turn
-      @board.render
-      puts "Check!" if @board.in_check?(@player1.color)
+      turn(@player2, @player1, @player2.color)
     end
-    # refactor these into methods that take player objects
 
-    if @board.checkmate?(@player1.color)
-          puts "#{@player2.name} wins!"
-    elsif @board.checkmate?(@player2.color)
-          puts "#{@player1.name} wins!"
-    end
+    @board.checkmate?(@player1.color) ? win(@player2) : win(@player1)
   end
 
+  def win(player)
+    puts "Checkmate! #{player.name} wins!"
+  end
 
 end
 
 
 class HumanPlayer
-
-  attr_reader :name, :color
 
   USER_INPUT = {
     "a" => 0,
@@ -71,6 +67,7 @@ class HumanPlayer
     "1" => 7
   }
 
+  attr_reader :name, :color
 
   def initialize(name, color, board)
     @name = name
@@ -78,21 +75,24 @@ class HumanPlayer
     @board = board
   end
 
-  #could have a factory method here to instantiate new players
-
-  def play_turn
+  def play_turn(turn_color)
     begin
     puts "Please input your starting and ending positions, Ex: f2,f3"
-    user_input = gets.chomp.downcase.scan(/\w/) # array: ["f", "2", "f", "3"]
-    # consider adding a InvalidMove check for bad input, (bad_input != bad_coord) e.g. 12, 8f
+    user_input = gets.chomp.downcase
+
+    unless user_input =~ /^[a-h][1-8],*[a-h][1-8]$/
+      raise InvalidMove.new("Letter-number, letter-number, it's not hard!")
+    end
+
     start_pos = [USER_INPUT[user_input[1]], USER_INPUT[user_input[0]]]
     end_pos = [USER_INPUT[user_input[3]], USER_INPUT[user_input[2]]]
 
-    @board.move(start_pos, end_pos)
+    @board.move(start_pos, end_pos, turn_color)
     rescue InvalidMove => e
       puts "Invalid move: #{e.message}"
       retry
     end
+    puts
   end
 
 
