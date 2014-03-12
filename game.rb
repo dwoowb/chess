@@ -2,15 +2,16 @@
 
 class Game
 
+  attr_reader :board
+
   def self.setup_game
+    new_board = ChessBoard.new.setup_board
     puts "Please enter a name for player 1"
-      player1 = HumanPlayer.new(gets.strip, :white)
+      player1 = HumanPlayer.new(gets.strip, :white, new_board)
     puts "Please enter a name for player 2"
-      player2 = HumanPlayer.new(gets.strip, :black)
-    Game.new(player1, player2, ChessBoard.new.setup_board)
+      player2 = HumanPlayer.new(gets.strip, :black, new_board)
+    Game.new(player1, player2, new_board)
   end
-
-
 
   def initialize(player1, player2, board)
     @board = board
@@ -21,20 +22,25 @@ class Game
 
   def play
     puts "Let the games begin!"
+    @board.render
+
     loop do
-      break if @board.checkmate?(player1.color)
+      break if @board.checkmate?(@player1.color)
       @player1.play_turn
-      #call render after each play_turn
+      @board.render
+      puts "Check!" if @board.in_check?(@player2.color)
 
-      break if @board.checkmate?(player2.color)
+      break if @board.checkmate?(@player2.color)
       @player2.play_turn
-      #call render after each play_turn
+      @board.render
+      puts "Check!" if @board.in_check?(@player1.color)
     end
+    # refactor these into methods that take player objects
 
-    if @board.checkmate?(player1.color)
-          puts "#{player2.name} wins!"
-    elsif @board.checkmate?(player1.color)
-          puts "#{player1.name} wins!"
+    if @board.checkmate?(@player1.color)
+          puts "#{@player2.name} wins!"
+    elsif @board.checkmate?(@player2.color)
+          puts "#{@player1.name} wins!"
     end
   end
 
@@ -55,20 +61,21 @@ class HumanPlayer
     "f" => 5,
     "g" => 6,
     "h" => 7,
-    "1" => 0,
-    "2" => 1,
-    "3" => 2,
-    "4" => 3,
-    "5" => 4,
-    "6" => 5,
-    "7" => 6,
-    "8" => 7
+    "8" => 0,
+    "7" => 1,
+    "6" => 2,
+    "5" => 3,
+    "4" => 4,
+    "3" => 5,
+    "2" => 6,
+    "1" => 7
   }
 
 
-  def initialize(name, color)
+  def initialize(name, color, board)
     @name = name
     @color = color
+    @board = board
   end
 
   #could have a factory method here to instantiate new players
@@ -81,7 +88,7 @@ class HumanPlayer
     start_pos = [USER_INPUT[user_input[1]], USER_INPUT[user_input[0]]]
     end_pos = [USER_INPUT[user_input[3]], USER_INPUT[user_input[2]]]
 
-    move(start_pos, end_pos)
+    @board.move(start_pos, end_pos)
     rescue InvalidMove => e
       puts "Invalid move: #{e.message}"
       retry

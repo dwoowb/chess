@@ -14,8 +14,8 @@ class SteppingPiece < Piece
       if on_board?(candidate_pos)
         if @board[candidate_pos].nil?
           moves << candidate_pos
-        elsif @board[move].color != self.color
-           moves << candidate_pos
+        elsif @board[candidate_pos].color != self.color
+          moves << candidate_pos
         end
       end
     end
@@ -73,21 +73,15 @@ class King < SteppingPiece
 end
 
 class Pawn < SteppingPiece
-  # Special piece class, can't move backwards.
-  # Will need to know which player is accessing this class
-  # to choose the direction of DELTAS.
-  # Currently we have DELTAS set for the player moving from
-  # the top of the board downwards.
-  # For the other player, multiply the row coordinate by -1.
 
-  WHITE_PAWN_DELTAS = [
+  BLACK_PAWN_DELTAS = [
     [1, 0],
     [2, 0],
     [1, 1],
     [1, -1]
   ]
 
-  BLACK_PAWN_DELTAS = [
+  WHITE_PAWN_DELTAS = [
     [-1, 0],
     [-2, 0],
     [-1, 1],
@@ -117,7 +111,7 @@ class Pawn < SteppingPiece
       if on_board?(candidate_pos)
 
         if [row_shift, col_shift].any?{|shift| shift == 0}
-          if row_shift == 2 && @position[0] == 1
+          if row_shift == -2 && @position[0] == 6
             moves << candidate_pos if @board[candidate_pos].nil?
           else
             moves << candidate_pos if @board[candidate_pos].nil?
@@ -144,7 +138,7 @@ class Pawn < SteppingPiece
       if on_board?(candidate_pos)
 
         if [row_shift, col_shift].any?{|shift| shift == 0}
-          if row_shift == -2 && @position[0] == 6
+          if row_shift == 2 && @position[0] == 1
             moves << candidate_pos if @board[candidate_pos].nil?
           else
             moves << candidate_pos if @board[candidate_pos].nil?

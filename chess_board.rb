@@ -20,7 +20,7 @@ class ChessBoard
     "Pawn"   => "\u2659"
   }
 
-  def initialize(grid = nil)
+  def initialize# (grid = nil)
     @grid = new_grid
   end
 
@@ -47,29 +47,11 @@ class ChessBoard
     end
   end
 
-  def in_check?(color)
-
-    king_position = @grid.flatten.select do |piece|
-      piece.class == King && piece.color == color
-    end.first.position
-  # could possibly break out into its own method ^
-    enemy_moves = []
-
-    @grid.flatten.select do |piece|
-      piece.color != color
-    end.each do |enemy|
-      enemy_moves += enemy.moves
-    end
-
-    return true if enemy_moves.include?(king_position)
-    false
-  end
-
   def move(start_pos, end_pos)
 
     if self[start_pos].nil?
       raise InvalidMove.new("There is no piece at that starting position.")
-    elsif self[start_pos].moves.include?(end_pos) == false
+    elsif self[start_pos].moves(start_pos).include?(end_pos) == false
       raise InvalidMove.new("This piece cannot move to that position.")
     elsif self[start_pos].move_into_check?(end_pos)
       raise InvalidMove.new("This move would put you in check.")
@@ -80,6 +62,11 @@ class ChessBoard
     end
   end
 
+  def move!(start_pos, end_pos)
+    self[end_pos] = self[start_pos]
+    self[start_pos] = nil
+    self[end_pos].position = end_pos
+  end
 
 
   def board_dup
@@ -101,36 +88,41 @@ class ChessBoard
     dup_board
   end
 
+  def in_check?(color)
+
+    king_position = @grid.flatten.select do |piece|
+      piece.class == King && piece.color == color
+    end.first.position
+  # could possibly break out into its own method ^
+    enemy_moves = []
+
+    @grid.flatten.select do |square|
+      square
+    end.select do |piece|
+      piece.color != color
+    end.each do |enemy|
+      enemy_moves += enemy.moves(enemy.position)
+    end
+
+    return true if enemy_moves.include?(king_position)
+    false
+  end
+
   def checkmate?(color)
     return false unless in_check?(color)
     all_valid_moves = []
 
-    @grid.flatten.select do |piece|
+    @grid.flatten.select do |square|
+      square
+    end.select do |piece|
       piece.color == color
-    end.each do |piece|
-       all_valid_moves += piece.valid_moves
+    end.each do |ally|
+       all_valid_moves += ally.valid_moves
     end
 
     all_valid_moves.empty?
   end
 
-  # BLACK_UNICODE = {
- #    "King"   => "\u265A",
- #    "Queen"  => "\u265B",
- #    "Rook"   => "\u265C",
- #    "Bishop" => "\u265D",
- #    "Knight" => "\u265E",
- #    "Pawn"   => "\u265F"
- #  }
- #
- #  WHITE_UNICODE = {
- #    "King"   => "\u2654",
- #    "Queen"  => "\u2655",
- #    "Rook"   => "\u2656",
- #    "Bishop" => "\u2657",
- #    "Knight" => "\u2658",
- #    "Pawn"   => "\u2659"
- #  }
 
   def render
     color_counter = 0
@@ -170,53 +162,37 @@ class ChessBoard
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   def setup_board
     @grid[1].each_index do |pawn_col|
-      self[[1, pawn_col]] = Pawn.new([1, pawn_col], self, :white)
+      self[[1, pawn_col]] = Pawn.new([1, pawn_col], self, :black)
     end
 
     @grid[6].each_index do |pawn_col|
-      self[[6, pawn_col]] = Pawn.new([6, pawn_col], self, :black)
+      self[[6, pawn_col]] = Pawn.new([6, pawn_col], self, :white)
     end
 
-    self[[0,0]] = Rook.new([0, 0],   self, :white)
-    self[[0,7]] = Rook.new([0, 7],   self, :white)
-    self[[7,0]] = Rook.new([7, 0],   self, :black)
-    self[[7,7]] = Rook.new([7, 7],   self, :black)
+    self[[0,0]] = Rook.new([0, 0],   self, :black)
+    self[[0,7]] = Rook.new([0, 7],   self, :black)
+    self[[7,0]] = Rook.new([7, 0],   self, :white)
+    self[[7,7]] = Rook.new([7, 7],   self, :white)
 
-    self[[0,2]] = Bishop.new([0, 2], self, :white)
-    self[[0,5]] = Bishop.new([0, 5], self, :white)
-    self[[7,2]] = Bishop.new([7, 2], self, :black)
-    self[[7,5]] = Bishop.new([7, 5], self, :black)
+    self[[0,2]] = Bishop.new([0, 2], self, :black)
+    self[[0,5]] = Bishop.new([0, 5], self, :black)
+    self[[7,2]] = Bishop.new([7, 2], self, :white)
+    self[[7,5]] = Bishop.new([7, 5], self, :white)
 
-    self[[0,1]] = Knight.new([0, 1], self, :white)
-    self[[0,6]] = Knight.new([0, 6], self, :white)
-    self[[7,1]] = Knight.new([7, 1], self, :black)
-    self[[7,6]] = Knight.new([7, 6], self, :black)
+    self[[0,1]] = Knight.new([0, 1], self, :black)
+    self[[0,6]] = Knight.new([0, 6], self, :black)
+    self[[7,1]] = Knight.new([7, 1], self, :white)
+    self[[7,6]] = Knight.new([7, 6], self, :white)
 
-    self[[0,3]] = King.new([0, 3],   self, :white)
-    self[[7,3]] = King.new([7, 3],   self, :black)
+    self[[0,4]] = King.new([0, 4],   self, :black)
+    self[[7,4]] = King.new([7, 4],   self, :white)
 
-    self[[0,4]] = Queen.new([0, 4],  self, :white)
-    self[[7,4]] = Queen.new([7, 4],  self, :black)
+    self[[0,3]] = Queen.new([0, 3],  self, :black)
+    self[[7,3]] = Queen.new([7, 3],  self, :white)
+
+    self
   end
 
 

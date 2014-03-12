@@ -24,14 +24,14 @@ class Piece
     poss_positions.include?(position)
   end
 
-  def move_into_check?(position)
+  def move_into_check?(end_position)
     dup_board = @board.board_dup
-    dup_board.move(self.position, position)
+    dup_board.move!(self.position, end_position)
     dup_board.in_check?(self.color)
   end
 
   def valid_moves
-    self.moves.select do |position|
+    self.moves(self.position).select do |position|
       !move_into_check?(position)
     end
   end

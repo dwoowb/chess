@@ -26,6 +26,11 @@ require_relative 'exceptions'
 # pb.moves([1,0])
 # db = cb.board_dup
 
+# cb = ChessBoard.new.setup_board
 
 
-game = Game.setup_game
+
+
+
+
+game = Game.setup_game.play
