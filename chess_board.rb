@@ -2,6 +2,24 @@ class ChessBoard
 
   attr_reader :grid
 
+  BLACK_UNICODE = {
+    "Queen"  => "\u265A",
+    "King"   => "\u265B",
+    "Rook"   => "\u265C",
+    "Bishop" => "\u265D",
+    "Knight" => "\u265E",
+    "Pawn"   => "\u265F"
+  }
+
+  WHITE_UNICODE = {
+    "Queen"  => "\u2654",
+    "King"   => "\u2655",
+    "Rook"   => "\u2656",
+    "Bishop" => "\u2657",
+    "Knight" => "\u2658",
+    "Pawn"   => "\u2659"
+  }
+
   def initialize(grid = nil)
     @grid = new_grid
   end
@@ -96,9 +114,9 @@ class ChessBoard
     all_valid_moves.empty?
   end
 
+  def render
 
-
-
+  end
 
   def setup_board
     @grid[1].each_index do |pawn_col|
