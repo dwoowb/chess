@@ -114,39 +114,109 @@ class ChessBoard
     all_valid_moves.empty?
   end
 
-  def render
+  # BLACK_UNICODE = {
+ #    "King"   => "\u265A",
+ #    "Queen"  => "\u265B",
+ #    "Rook"   => "\u265C",
+ #    "Bishop" => "\u265D",
+ #    "Knight" => "\u265E",
+ #    "Pawn"   => "\u265F"
+ #  }
+ #
+ #  WHITE_UNICODE = {
+ #    "King"   => "\u2654",
+ #    "Queen"  => "\u2655",
+ #    "Rook"   => "\u2656",
+ #    "Bishop" => "\u2657",
+ #    "Knight" => "\u2658",
+ #    "Pawn"   => "\u2659"
+ #  }
 
+  def render
+    color_counter = 0
+    @grid.each_with_index do |array, row|
+      color_counter += 1
+      array.each_with_index do |square, col|
+        if color_counter.even?
+          if square.nil?
+            print "   ".colorize(:background => :light_red)
+          else
+            if square.color == :white
+              unicode_piece = WHITE_UNICODE[square.class.to_s]
+              print " #{unicode_piece} ".colorize(:background => :light_red)
+            else
+              unicode_piece = BLACK_UNICODE[square.class.to_s]
+              print " #{unicode_piece} ".colorize(:background => :light_red)
+            end
+          end
+        else
+          if square.nil?
+            print "   ".colorize(:background => :light_green)
+          else
+            if square.color == :white
+              unicode_piece = WHITE_UNICODE[square.class.to_s]
+              print " #{unicode_piece} ".colorize(:background => :light_green)
+            else
+              unicode_piece = BLACK_UNICODE[square.class.to_s]
+              print " #{unicode_piece} ".colorize(:background => :light_green)
+            end
+          end
+        end
+        color_counter += 1
+      end
+      puts
+    end
   end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   def setup_board
     @grid[1].each_index do |pawn_col|
-      self[[1, pawn_col]] = Pawn.new([1, pawn_col], self, :black)
+      self[[1, pawn_col]] = Pawn.new([1, pawn_col], self, :white)
     end
 
     @grid[6].each_index do |pawn_col|
-      self[[6, pawn_col]] = Pawn.new([6, pawn_col], self, :white)
+      self[[6, pawn_col]] = Pawn.new([6, pawn_col], self, :black)
     end
 
-    self[[0,0]] = Rook.new([0, 0],   self, :black)
-    self[[0,7]] = Rook.new([0, 7],   self, :black)
-    self[[7,0]] = Rook.new([7, 0],   self, :white)
-    self[[7,7]] = Rook.new([7, 7],   self, :white)
+    self[[0,0]] = Rook.new([0, 0],   self, :white)
+    self[[0,7]] = Rook.new([0, 7],   self, :white)
+    self[[7,0]] = Rook.new([7, 0],   self, :black)
+    self[[7,7]] = Rook.new([7, 7],   self, :black)
 
-    self[[0,2]] = Bishop.new([0, 2], self, :black)
-    self[[0,5]] = Bishop.new([0, 5], self, :black)
-    self[[7,2]] = Bishop.new([7, 2], self, :white)
-    self[[7,5]] = Bishop.new([7, 5], self, :white)
+    self[[0,2]] = Bishop.new([0, 2], self, :white)
+    self[[0,5]] = Bishop.new([0, 5], self, :white)
+    self[[7,2]] = Bishop.new([7, 2], self, :black)
+    self[[7,5]] = Bishop.new([7, 5], self, :black)
 
-    self[[0,1]] = Knight.new([0, 1], self, :black)
-    self[[0,6]] = Knight.new([0, 6], self, :black)
-    self[[7,1]] = Knight.new([7, 1], self, :white)
-    self[[7,6]] = Knight.new([7, 6], self, :white)
+    self[[0,1]] = Knight.new([0, 1], self, :white)
+    self[[0,6]] = Knight.new([0, 6], self, :white)
+    self[[7,1]] = Knight.new([7, 1], self, :black)
+    self[[7,6]] = Knight.new([7, 6], self, :black)
 
-    self[[0,4]] = King.new([0, 4],   self, :black)
-    self[[7,4]] = King.new([7, 4],   self, :white)
+    self[[0,3]] = King.new([0, 3],   self, :white)
+    self[[7,3]] = King.new([7, 3],   self, :black)
 
-    self[[0,3]] = Queen.new([0, 3],  self, :black)
-    self[[7,3]] = Queen.new([7, 3],  self, :white)
+    self[[0,4]] = Queen.new([0, 4],  self, :white)
+    self[[7,4]] = Queen.new([7, 4],  self, :black)
   end
 
 

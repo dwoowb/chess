@@ -4,9 +4,9 @@ class Game
 
   def self.setup_game
     puts "Please enter a name for player 1"
-      player1 = HumanPlayer.new(gets.strip, :black)
+      player1 = HumanPlayer.new(gets.strip, :white)
     puts "Please enter a name for player 2"
-      player2 = HumanPlayer.new(gets.strip, :white)
+      player2 = HumanPlayer.new(gets.strip, :black)
     Game.new(player1, player2, ChessBoard.new.setup_board)
   end
 
@@ -22,11 +22,11 @@ class Game
   def play
     puts "Let the games begin!"
     loop do
-      break if checkmate?(player1.color)
+      break if @board.checkmate?(player1.color)
       @player1.play_turn
       #call render after each play_turn
 
-      break if checkmate?(player2.color)
+      break if @board.checkmate?(player2.color)
       @player2.play_turn
       #call render after each play_turn
     end
@@ -68,7 +68,7 @@ class HumanPlayer
 
   def initialize(name, color)
     @name = name
-    @color = color.to_sym
+    @color = color
   end
 
   #could have a factory method here to instantiate new players

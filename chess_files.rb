@@ -24,6 +24,8 @@ require_relative 'exceptions'
 # pb = Pawn.new([1,0], cb, :black)
 # pw = Pawn.new([6,0], cb, :white)
 # pb.moves([1,0])
-#
-# cb = ChessBoard.new
 # db = cb.board_dup
+
+
+
+game = Game.setup_game

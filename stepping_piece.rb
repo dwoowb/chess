@@ -80,14 +80,14 @@ class Pawn < SteppingPiece
   # the top of the board downwards.
   # For the other player, multiply the row coordinate by -1.
 
-  BLACK_PAWN_DELTAS = [
+  WHITE_PAWN_DELTAS = [
     [1, 0],
     [2, 0],
     [1, 1],
     [1, -1]
   ]
 
-  WHITE_PAWN_DELTAS = [
+  BLACK_PAWN_DELTAS = [
     [-1, 0],
     [-2, 0],
     [-1, 1],
@@ -117,7 +117,7 @@ class Pawn < SteppingPiece
       if on_board?(candidate_pos)
 
         if [row_shift, col_shift].any?{|shift| shift == 0}
-          if row_shift == -2 && @position[0] == 6
+          if row_shift == 2 && @position[0] == 1
             moves << candidate_pos if @board[candidate_pos].nil?
           else
             moves << candidate_pos if @board[candidate_pos].nil?
@@ -144,7 +144,7 @@ class Pawn < SteppingPiece
       if on_board?(candidate_pos)
 
         if [row_shift, col_shift].any?{|shift| shift == 0}
-          if row_shift == 2 && @position[0] == 1
+          if row_shift == -2 && @position[0] == 6
             moves << candidate_pos if @board[candidate_pos].nil?
           else
             moves << candidate_pos if @board[candidate_pos].nil?
