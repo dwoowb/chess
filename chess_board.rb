@@ -34,7 +34,7 @@ class ChessBoard
     king_position = @grid.flatten.select do |piece|
       piece.class == King && piece.color == color
     end.first.position
-
+  # could possibly break out into its own method ^
     enemy_moves = []
 
     @grid.flatten.select do |piece|
@@ -78,7 +78,18 @@ class ChessBoard
     dup_board
   end
 
+  def checkmate?(color)
+    return false unless in_check?(color)
+    all_valid_moves = []
 
+    @grid.flatten.select do |piece|
+      piece.color == color
+    end.each do |piece|
+       all_valid_moves += piece.valid_moves
+    end
+
+    all_valid_moves.empty?
+  end
 
 
 
