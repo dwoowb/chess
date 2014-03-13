@@ -14,5 +14,7 @@ how to play
 
 customize
 --------
-1. Edit chess_board.rb line 148 to  "'square_color(square, :black)'"
+1. Edit chess_board.rb line 148 to  `` `square_color(square, :black)` ``
 2. Set terminal to Homebrew
+
+
